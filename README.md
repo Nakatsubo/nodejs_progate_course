@@ -4,7 +4,7 @@
 Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
 ## インデックス
-- 1. 買い物メモサービス
+1. [買い物メモサービス](https://github.com/NakatsuboYusuke/nodejs_progate_course#1-%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%A1%E3%83%A2%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9)
 
 ## 1. 買い物メモサービス
 
@@ -62,4 +62,55 @@ ejsファイルはviewsディレクトリ配下に置く
     ├── package.json
     └── views
         └── hello.ejs
+```
+
+### ルーティング
+
+#### app.js
+
+```javascript
+const express = require('express');
+const app = express();
+
+//
+app.get('/', (req, res) => {
+  res.render('hello.ejs')
+});
+
+// top
+app.get('/top', (req, res) => {
+  res.render('top.ejs');
+});
+
+// サーバーを起動する
+app.listen(3000);
+```
+
+#### ~/views/top.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <div class="top-wrapper">
+      <div class="top-detail">
+        <h2 class="subtitle">買い物リストアプリ</h2>
+        <h1 class="title">LIST APP</h1>
+        <p class="description">
+          LIST APPは、買い物をリストアップするサービスです。
+          <br>
+          買いたいものをリストに追加してみましょう。
+        </p>
+        <a class="index-button">一覧を見る</a>
+      </div>
+      <div class="top-image">
+      </div>
+    </div>
+  </body>
+</html>
 ```
