@@ -1,5 +1,6 @@
 # Node.js
-世界中で多く使われているサーバーサイドで動くJavaScript
+世界中で多く使われているサーバーサイドで動くJavaScript.
+
 Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
 ## インデックス
@@ -14,6 +15,7 @@ $ npm init - y
 
 // Expressをインストール
 $ npm install -D express
+// EJSをインストール
 $ npm install -D ejs
 ```
 
@@ -33,6 +35,7 @@ app.listen(3000);
 ```
 
 #### ~/views/hello.ejs
+ejsファイルはviewsディレクトリ配下に置く
 
 ```html
 <!DOCTYPE html>
@@ -47,4 +50,16 @@ app.listen(3000);
   <p>Hello, World</p>
 </body>
 </html>
+```
+
+```bash
+.
+├── README.md
+└── toDoApp
+    ├── app.js
+    ├── node_modules
+    ├── package-lock.json
+    ├── package.json
+    └── views
+        └── hello.ejs
 ```
