@@ -114,3 +114,106 @@ app.listen(3000);
   </body>
 </html>
 ```
+
+### Assets ファイルの設定
+publicディレクトリ配下に置く
+
+```bash
+.
+├── app.js
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+└── views
+    ├── hello.ejs
+    └── top.ejs
+```
+
+#### ~/public/css/style.css
+#### ~/public/images/top.png
+
+```html
+// ...
+
+<link rel="stylesheet" href="/css/style.css">
+
+//...
+<div class="top-image">
+  <img src="/images/top.png">
+</div>
+```
+
+### ルーティングの追加
+
+#### app.js
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Assets ファイルの設定 <- 追加
+app.use(express.static('public'));
+
+//
+app.get('/', (req, res) => {
+  res.render('hello.ejs')
+});
+
+// top
+app.get('/top', (req, res) => {
+  res.render('top.ejs');
+});
+
+// index <- 追加
+app.get('/index', (req, res) => {
+  res.render('index.ejs');
+})
+
+// サーバーを起動する
+app.listen(3000);
+```
+
+#### ~/views/index.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="header-logo">LIST APP</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1>買い物リスト</h1>
+      </div>
+      <div class="index-table-wrapper">
+        <div class="table-head">
+          <span class="id-column">ID</span>
+          <span>買うもの</span>
+        </div>
+        <ul class="table-body">
+          <li>
+            <span class="id-column">1</span>
+            <span class="name-column">じゃがいも</span>
+          </li>
+          <li>
+            <span class="id-column">2</span>
+            <span class="name-column">にんじん</span>
+          </li>
+          <li>
+            <span class="id-column">3</span>
+            <span class="name-column">たまねぎ</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
+```
