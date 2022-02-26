@@ -3,12 +3,15 @@
 
 Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
+- [Macでmysqlを扱う方法](https://qiita.com/fuwamaki/items/194c2a82bd6865f26045)
+- [Express.js(node.js)からMySQLへの接続とCRUD操作](https://reffect.co.jp/node-js/express-js-connect-mysql)
+
 ## インデックス
 1. [買い物メモサービス](https://github.com/NakatsuboYusuke/nodejs_progate_course#1-%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%A1%E3%83%A2%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9)
 
 ## 1. 買い物メモサービス
 
-### Express EJS をインストール
+### Express EJS MySQL をインストール
 
 ```bash
 $ npm init - y
@@ -17,6 +20,23 @@ $ npm init - y
 $ npm install -D express
 // EJSをインストール
 $ npm install -D ejs
+// MySQLをインストール
+$ npm install -D mysql
+```
+
+### MySQL の設定
+
+```bash
+$ brew install mysql
+// 起動
+$ mysql.server start
+// パスワードなしでログイン
+$ mysql.server start --skip-grant-tables
+// 停止
+$ mysql.server stop
+
+// rootでログイン
+$ mysql -u root
 ```
 
 #### app.js
@@ -64,7 +84,7 @@ ejsファイルはviewsディレクトリ配下に置く
         └── hello.ejs
 ```
 
-### ルーティング
+### ルーティングの設定
 
 #### app.js
 
@@ -216,4 +236,37 @@ app.listen(3000);
     </div>
   </body>
 </html>
+```
+
+### データベースの設定
+
+#### app.js
+
+```javascript
+const mysql = require('mysql');
+
+// ...
+// データベースと接続
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+});
+```
+
+### データベースの作成
+
+#### app.js
+
+```javascript
+const mysql = require('mysql');
+
+// ...
+// データベースを作成
+connection.connect((error) => {
+  console.log('Connected');
+  connection.query('CREATE DATABASE list_app', (error, result) => {
+    console.log('database created');
+  });
+});
 ```
