@@ -1,5 +1,6 @@
 const express = require('express');
 // MySQL の読み込み
+const port = 3306
 const mysql = require('mysql');
 const app = express();
 
@@ -8,6 +9,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
+  port: port
 });
 connection.connect((error) => {
   if (error) throw error;
