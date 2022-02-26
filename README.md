@@ -3,12 +3,15 @@
 
 Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
+- [Macでmysqlを扱う方法](https://qiita.com/fuwamaki/items/194c2a82bd6865f26045)
+- [Express.js(node.js)からMySQLへの接続とCRUD操作](https://reffect.co.jp/node-js/express-js-connect-mysql)
+
 ## インデックス
-- 1. 買い物メモサービス
+1. [買い物メモサービス](https://github.com/NakatsuboYusuke/nodejs_progate_course#1-%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%A1%E3%83%A2%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9)
 
 ## 1. 買い物メモサービス
 
-### Express EJS をインストール
+### Express EJS MySQL をインストール
 
 ```bash
 $ npm init - y
@@ -17,6 +20,23 @@ $ npm init - y
 $ npm install -D express
 // EJSをインストール
 $ npm install -D ejs
+// MySQLをインストール
+$ npm install -D mysql
+```
+
+### MySQL の設定
+
+```bash
+$ brew install mysql
+// 起動
+$ mysql.server start
+// パスワードなしでログイン
+$ mysql.server start --skip-grant-tables
+// 停止
+$ mysql.server stop
+
+// rootでログイン
+$ mysql -u root
 ```
 
 #### app.js
@@ -62,4 +82,191 @@ ejsファイルはviewsディレクトリ配下に置く
     ├── package.json
     └── views
         └── hello.ejs
+```
+
+### ルーティングの設定
+
+#### app.js
+
+```javascript
+const express = require('express');
+const app = express();
+
+//
+app.get('/', (req, res) => {
+  res.render('hello.ejs')
+});
+
+// top
+app.get('/top', (req, res) => {
+  res.render('top.ejs');
+});
+
+// サーバーを起動する
+app.listen(3000);
+```
+
+#### ~/views/top.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <div class="top-wrapper">
+      <div class="top-detail">
+        <h2 class="subtitle">買い物リストアプリ</h2>
+        <h1 class="title">LIST APP</h1>
+        <p class="description">
+          LIST APPは、買い物をリストアップするサービスです。
+          <br>
+          買いたいものをリストに追加してみましょう。
+        </p>
+        <a class="index-button">一覧を見る</a>
+      </div>
+      <div class="top-image">
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+### Assets ファイルの設定
+publicディレクトリ配下に置く
+
+```bash
+.
+├── app.js
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+└── views
+    ├── hello.ejs
+    └── top.ejs
+```
+
+#### ~/public/css/style.css
+#### ~/public/images/top.png
+
+```html
+// ...
+
+<link rel="stylesheet" href="/css/style.css">
+
+//...
+<div class="top-image">
+  <img src="/images/top.png">
+</div>
+```
+
+### ルーティングの追加
+
+#### app.js
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Assets ファイルの設定 <- 追加
+app.use(express.static('public'));
+
+//
+app.get('/', (req, res) => {
+  res.render('hello.ejs')
+});
+
+// top
+app.get('/top', (req, res) => {
+  res.render('top.ejs');
+});
+
+// index <- 追加
+app.get('/index', (req, res) => {
+  res.render('index.ejs');
+})
+
+// サーバーを起動する
+app.listen(3000);
+```
+
+#### ~/views/index.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="header-logo">LIST APP</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1>買い物リスト</h1>
+      </div>
+      <div class="index-table-wrapper">
+        <div class="table-head">
+          <span class="id-column">ID</span>
+          <span>買うもの</span>
+        </div>
+        <ul class="table-body">
+          <li>
+            <span class="id-column">1</span>
+            <span class="name-column">じゃがいも</span>
+          </li>
+          <li>
+            <span class="id-column">2</span>
+            <span class="name-column">にんじん</span>
+          </li>
+          <li>
+            <span class="id-column">3</span>
+            <span class="name-column">たまねぎ</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+### データベースの設定
+
+#### app.js
+
+```javascript
+const mysql = require('mysql');
+
+// ...
+// データベースと接続
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+});
+```
+
+### データベースの作成
+
+#### app.js
+
+```javascript
+const mysql = require('mysql');
+
+// ...
+// データベースを作成
+connection.connect((error) => {
+  console.log('Connected');
+  connection.query('CREATE DATABASE list_app', (error, result) => {
+    console.log('database created');
+  });
+});
 ```
