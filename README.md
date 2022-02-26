@@ -239,6 +239,7 @@ app.listen(3000);
 ```
 
 ### データベースの設定
+データベースに接続できない -> やりたいことと外れてきているので、一旦ペンディング
 
 #### app.js
 
@@ -259,14 +260,4 @@ const connection = mysql.createConnection({
 #### app.js
 
 ```javascript
-const mysql = require('mysql');
-
-// ...
-// データベースを作成
-connection.connect((error) => {
-  console.log('Connected');
-  connection.query('CREATE DATABASE list_app', (error, result) => {
-    console.log('database created');
-  });
-});
 ```
