@@ -30,7 +30,7 @@ app.get('/index', (req, res) => {
     'SELECT * FROM items',
     (error, results) => {
       console.log(results);
-      res.render('index.ejs');
+      res.render('index.ejs', {items: results});
     }
   )
 });

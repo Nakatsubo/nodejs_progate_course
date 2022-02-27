@@ -288,7 +288,6 @@ mysql> show variables like 'validate_password%';
 | validate_password.special_char_count | 1     |
 +--------------------------------------+-------+
 
-
 // ユーザーを作成、ユーザー権限を付与
 mysql> CREATE USER 'progate'@'localhost' IDENTIFIED BY 'password';
 mysql> GRANT ALL ON toDoApp.* TO 'progate'@'localhost';
@@ -411,4 +410,20 @@ Connected
   RowDataPacket { id: 2, name: 'にんじん' },
   RowDataPacket { id: 3, name: 'たまねぎ' }
 ]
+```
+
+#### ~/views/index.ejs
+
+```html
+// ...
+        <ul class="table-body">
+          <% items.forEach((item) => { %>
+            <li>
+              <div class="item-data">
+                <span class="id-column"><%= item.id %></span>
+                <span class="name-column"><%= item.name %></span>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
 ```
