@@ -14,7 +14,7 @@ Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
 ## 1. 買い物メモサービス
 
-### Express EJS MySQL をインストール
+### Express, EJS, MySQL をインストール
 
 ```bash
 $ npm init - y
