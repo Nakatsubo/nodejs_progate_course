@@ -14,7 +14,7 @@ Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
 ## 1. 買い物メモサービス
 
-### Express EJS MySQL をインストール
+### Express, EJS, MySQL をインストール
 
 ```bash
 $ npm init - y
@@ -506,4 +506,22 @@ app.post('/create', (req, res) => {
   <input type="text" name="itemName">
   <input type="submit" value="作成する">
 </form>
+```
+
+```bash
+.
+├── app.js
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+│   ├── css
+│   │   └── style.css
+│   └── images
+│       └── top.png
+└── views
+    ├── hello.ejs
+    ├── index.ejs
+    ├── new.ejs
+    └── top.ejs
 ```
