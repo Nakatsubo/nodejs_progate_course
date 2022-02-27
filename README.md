@@ -3,8 +3,11 @@
 
 Referenced by [progate](https://prog-8.com/courses/nodejs) Tutorials.
 
+## 参考サイト
 - [Macでmysqlを扱う方法](https://qiita.com/fuwamaki/items/194c2a82bd6865f26045)
-- [Express.js(node.js)からMySQLへの接続とCRUD操作](https://reffect.co.jp/node-js/express-js-connect-mysql)
+- [Mac OS上に MySQL8.0 をインストールする](https://qiita.com/kobayashi-m42/items/dae22e49ab060adf920f)
+- [Node.js+ExpressでMySQLに接続して一覧表示する](https://0forest.com/node-js-mysql/)
+- [MySQLでユーザを作成し、権限を設定する方法](https://proengineer.internous.co.jp/content/columnfeature/6638)
 
 ## インデックス
 1. [買い物メモサービス](https://github.com/NakatsuboYusuke/nodejs_progate_course#1-%E8%B2%B7%E3%81%84%E7%89%A9%E3%83%A1%E3%83%A2%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9)
@@ -27,6 +30,7 @@ $ npm install -D mysql
 ### MySQL の設定
 
 ```bash
+// MySQLのグローバルインストール
 $ brew install mysql
 // 起動
 $ mysql.server start
@@ -37,6 +41,10 @@ $ mysql.server stop
 
 // rootでログイン
 $ mysql -u root
+// ログアウト
+> exit
+// セキュリティの設定
+$ mysql_secure_installation
 ```
 
 #### app.js
@@ -239,7 +247,122 @@ app.listen(3000);
 ```
 
 ### データベースの設定
-データベースに接続できない -> やりたいことと外れてきているので、一旦ペンディング
+MySQLへログインする
+
+#### データベースを作成する前に MySQL のパスワードポリシーを変更しておく
+
+>ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+
+```bash
+// サーバーをスタート
+$ mysql.server start
+// MySQLへログイン
+$ mysql -uroot -p
+
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+--------+
+| Variable_name                        | Value  |
++--------------------------------------+--------+
+| validate_password.check_user_name    | ON     |
+| validate_password.dictionary_file    |        |
+| validate_password.length             | 8      |
+| validate_password.mixed_case_count   | 1      |
+| validate_password.number_count       | 1      |
+| validate_password.policy             | MEDIUM |
+| validate_password.special_char_count | 1      |
++--------------------------------------+--------+
+
+// validate_password.policy を LOW に変更 
+mysql> set global validate_password.policy=LOW;
+
+mysql> show variables like 'validate_password%';
++--------------------------------------+-------+
+| Variable_name                        | Value |
++--------------------------------------+-------+
+| validate_password.check_user_name    | ON    |
+| validate_password.dictionary_file    |       |
+| validate_password.length             | 8     |
+| validate_password.mixed_case_count   | 1     |
+| validate_password.number_count       | 1     |
+| validate_password.policy             | LOW   |
+| validate_password.special_char_count | 1     |
++--------------------------------------+-------+
+
+
+// ユーザーを作成、ユーザー権限を付与
+mysql> CREATE USER 'progate'@'localhost' IDENTIFIED BY 'password';
+mysql> GRANT ALL ON toDoApp.* TO 'progate'@'localhost';
+
+// ユーザー一覧を表示
+mysql> SELECT user, host FROM mysql.user;
+```
+
+#### MySQL8.0の認証プラグイン caching_sha2_password でエラーが発生した場合
+ポリシーを mysql_native_password に変更する
+
+```bash
+code: 'ER_NOT_SUPPORTED_AUTH_MODE',
+errno: 1251,
+sqlMessage: 'Client does not support authentication protocol requested by server; consider upgrading MySQL client',
+sqlState: '08004',
+fatal: true
+```
+
+```bash
+// ポリシーの変更
+mysql> ALTER USER 'progate'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+
+mysql> SELECT user, host, plugin FROM mysql.user;
++------------------+-----------+-----------------------+
+| user             | host      | plugin                |
++------------------+-----------+-----------------------+
+// ...
+| progate          | localhost | mysql_native_password |
+// ...
++------------------+-----------+-----------------------+
+```
+
+```bash
+// サーバーをスタート
+$ mysql.server start
+// MySQLへログイン
+$ mysql -uroot -p
+// ポート番号の確認
+mysql> show variables like 'port';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| port          | 3306  |
++---------------+-------+
+```
+
+### データベースの作成
+データベース名 toDoApp, テーブル名 items とする
+
+```bash
+// データベースを作成
+mysql> CREATE DATABASE toDoApp;
+
+// テーブルを作成
+mysql> CREATE TABLE items(
+    ->      id INT(11) AUTO_INCREMENT NOT NULL,
+    ->      name VARCHAR(30) NOT NULL ,
+    ->      PRIMARY KEY (id));
+
+// テーブル情報の確認
+mysql> DESC items;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(30) | NO   |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+
+// シードデータを投入
+mysql> INSERT items(name) VALUES ('じゃがいも');
+mysql> INSERT items(name) VALUES ('にんじん');
+mysql> INSERT items(name) VALUES ('たまねぎ');
+```
 
 #### app.js
 
@@ -250,14 +373,23 @@ const mysql = require('mysql');
 // データベースと接続
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: 'progate',
+  password: 'password',
+  database: 'toDoApp',
+  port: 3306
+});
+connection.connect((error) => {
+  if (error) throw error;
+  console.log('Connected');
 });
 ```
 
-### データベースの作成
-
-#### app.js
-
-```javascript
+```bash
+❯ node app.js
+Connected
+[
+  RowDataPacket { id: 1, name: 'じゃがいも' },
+  RowDataPacket { id: 2, name: 'にんじん' },
+  RowDataPacket { id: 3, name: 'たまねぎ' }
+]
 ```

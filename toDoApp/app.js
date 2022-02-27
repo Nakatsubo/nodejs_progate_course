@@ -1,15 +1,15 @@
 const express = require('express');
 // MySQL の読み込み
-const port = 3306
 const mysql = require('mysql');
 const app = express();
 
 // データベースと接続
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '',
-  port: port
+  user: 'progate',
+  password: 'password',
+  database: 'toDoApp',
+  port: 3306
 });
 connection.connect((error) => {
   if (error) throw error;
