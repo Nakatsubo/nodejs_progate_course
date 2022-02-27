@@ -19,6 +19,11 @@ connection.connect((error) => {
 // Assets ファイルの設定
 app.use(express.static('public'));
 
+// フォームから入力された値を受け取る
+app.use(express.urlencoded({extended: false}));
+
+//////////////////// CRUD機能の追加
+
 // top
 app.get('/', (req, res) => {
   res.render('top.ejs');
@@ -30,10 +35,28 @@ app.get('/index', (req, res) => {
     'SELECT * FROM items',
     (error, results) => {
       console.log(results);
-      res.render('index.ejs');
+      res.render('index.ejs', {items: results});
     }
   )
 });
+
+// new
+app.get('/new', (req, res) => {
+  res.render('new.ejs');
+});
+
+// create
+app.post('/create', (req, res) => {
+  connection.query(
+    'INSERT INTO items (name) VALUE (?)',
+    [req.body.itemName],
+    (error, results) => {
+      res.redirect('/index');
+    }
+  )
+});
+
+////////////////////
 
 // サーバーを起動する
 app.listen(3000);

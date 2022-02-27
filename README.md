@@ -172,7 +172,7 @@ publicディレクトリ配下に置く
 </div>
 ```
 
-### ルーティングの追加
+### ルーティングの追加(index)
 
 #### app.js
 
@@ -288,7 +288,6 @@ mysql> show variables like 'validate_password%';
 | validate_password.special_char_count | 1     |
 +--------------------------------------+-------+
 
-
 // ユーザーを作成、ユーザー権限を付与
 mysql> CREATE USER 'progate'@'localhost' IDENTIFIED BY 'password';
 mysql> GRANT ALL ON toDoApp.* TO 'progate'@'localhost';
@@ -384,6 +383,25 @@ connection.connect((error) => {
 });
 ```
 
+### データベースからデータを取得
+
+#### app.js
+
+```javascript
+// ...
+
+// index
+app.get('/index', (req, res) => {
+  connection.query(
+    'SELECT * FROM items',
+    (error, results) => {
+      console.log(results);
+      res.render('index.ejs');
+    }
+  )
+});
+```
+
 ```bash
 ❯ node app.js
 Connected
@@ -392,4 +410,100 @@ Connected
   RowDataPacket { id: 2, name: 'にんじん' },
   RowDataPacket { id: 3, name: 'たまねぎ' }
 ]
+```
+
+#### ~/views/index.ejs
+
+```html
+// ...
+<ul class="table-body">
+  <% items.forEach((item) => { %>
+    <li>
+      <div class="item-data">
+        <span class="id-column"><%= item.id %></span>
+        <span class="name-column"><%= item.name %></span>
+      </div>
+    </li>
+  <% }) %>
+</ul>
+```
+
+### ルーティングの追加(new)
+
+#### app.js
+
+```javascript
+//...
+
+// new
+app.get('/new', (req, res) => {
+  res.render('new.ejs');
+});
+```
+
+#### ~/views/new.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-logo">LIST APP</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1>買い物リスト作成</h1>
+      </div>
+      <div class="item-form-wrapper">
+        <p class="form-label">買うもの</p>
+        <input type="text">
+        <input type="submit" value="作成する">
+      </div>
+      <a href="/index" class="cancel-button">もどる</a>
+    </div>
+  </body>
+</html>
+```
+
+### ルーティングの追加(create)
+
+#### app.js
+
+```javascript
+// ...
+
+// フォームから入力された値を受け取る
+app.use(express.urlencoded({extended: false}));
+
+// ...
+
+// create
+app.post('/create', (req, res) => {
+  connection.query(
+    'INSERT INTO items (name) VALUE (?)',
+    [req.body.itemName],
+    (error, results) => {
+      res.redirect('/index');
+    }
+  )
+});
+```
+
+#### ~/views/new.ejs
+
+```html
+// ...
+
+// フォームにmethod属性, action属性を追加する
+<form method="post" action="/create">
+  // name属性を追加する(値をcreateアクションに渡す)
+  <input type="text" name="itemName">
+  <input type="submit" value="作成する">
+</form>
 ```

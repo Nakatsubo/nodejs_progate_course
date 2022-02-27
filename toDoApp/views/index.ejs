@@ -8,11 +8,12 @@
   </head>
   <body>
     <header>
-      <a class="header-logo" href="/">LIST APP</a>
+      <a href="/" class="header-logo">LIST APP</a>
     </header>
     <div class="container">
       <div class="container-header">
         <h1>買い物リスト</h1>
+        <a href="/new" class="new-button">+ 新規作成</a>
       </div>
       <div class="index-table-wrapper">
         <div class="table-head">
@@ -20,18 +21,14 @@
           <span>買うもの</span>
         </div>
         <ul class="table-body">
-          <li>
-            <span class="id-column">1</span>
-            <span class="name-column">じゃがいも</span>
-          </li>
-          <li>
-            <span class="id-column">2</span>
-            <span class="name-column">にんじん</span>
-          </li>
-          <li>
-            <span class="id-column">3</span>
-            <span class="name-column">たまねぎ</span>
-          </li>
+          <% items.forEach((item) => { %>
+            <li>
+              <div class="item-data">
+                <span class="id-column"><%= item.id %></span>
+                <span class="name-column"><%= item.name %></span>
+              </div>
+            </li>
+          <% }) %>
         </ul>
       </div>
     </div>
