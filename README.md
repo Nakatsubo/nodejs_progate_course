@@ -509,21 +509,23 @@ app.post('/create', (req, res) => {
 ```
 
 ```bash
+Last login: Sun Feb 27 15:09:52 on ttys008
+
+~/develop/progate_beginner/nodejs/toDoApp develop
+❯ tree
 .
-├── README.md
-└── toDoApp
-    ├── app.js
-    ├── node_modules
-    ├── package-lock.json
-    ├── package.json
-    ├── public
-    │   ├── css
-    │   │   └── style.css
-    │   └── images
-    │       └── top.png
-    └── views
-        ├── hello.ejs
-        ├── index.ejs
-        ├── new.ejs
-        └── top.ejs
+├── app.js
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+│   ├── css
+│   │   └── style.css
+│   └── images
+│       └── top.png
+└── views
+    ├── hello.ejs
+    ├── index.ejs
+    ├── new.ejs
+    └── top.ejs
 ```
