@@ -509,10 +509,6 @@ app.post('/create', (req, res) => {
 ```
 
 ```bash
-Last login: Sun Feb 27 15:09:52 on ttys008
-
-~/develop/progate_beginner/nodejs/toDoApp develop
-❯ tree
 .
 ├── app.js
 ├── node_modules
