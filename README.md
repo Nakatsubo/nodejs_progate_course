@@ -416,16 +416,16 @@ Connected
 
 ```html
 // ...
-        <ul class="table-body">
-          <% items.forEach((item) => { %>
-            <li>
-              <div class="item-data">
-                <span class="id-column"><%= item.id %></span>
-                <span class="name-column"><%= item.name %></span>
-              </div>
-            </li>
-          <% }) %>
-        </ul>
+<ul class="table-body">
+  <% items.forEach((item) => { %>
+    <li>
+      <div class="item-data">
+        <span class="id-column"><%= item.id %></span>
+        <span class="name-column"><%= item.name %></span>
+      </div>
+    </li>
+  <% }) %>
+</ul>
 ```
 
 ### ルーティングの追加(new)
@@ -438,7 +438,7 @@ Connected
 // new
 app.get('/new', (req, res) => {
   res.render('new.ejs');
-})
+});
 ```
 
 #### ~/views/new.ejs
@@ -469,4 +469,41 @@ app.get('/new', (req, res) => {
     </div>
   </body>
 </html>
+```
+
+### ルーティングの追加(create)
+
+#### app.js
+
+```javascript
+// ...
+
+// フォームから入力された値を受け取る
+app.use(express.urlencoded({extended: false}));
+
+// ...
+
+// create
+app.post('/create', (req, res) => {
+  connection.query(
+    'INSERT INTO items (name) VALUE (?)',
+    [req.body.itemName],
+    (error, results) => {
+      res.redirect('/index');
+    }
+  )
+});
+```
+
+#### ~/views/new.ejs
+
+```html
+// ...
+
+// フォームにmethod属性, action属性を追加する
+<form method="post" action="/create">
+  // name属性を追加する(値をcreateアクションに渡す)
+  <input type="text" name="itemName">
+  <input type="submit" value="作成する">
+</form>
 ```
