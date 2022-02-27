@@ -384,6 +384,25 @@ connection.connect((error) => {
 });
 ```
 
+### データベースからデータを取得
+
+#### app.js
+
+```javascript
+// ...
+
+// index
+app.get('/index', (req, res) => {
+  connection.query(
+    'SELECT * FROM items',
+    (error, results) => {
+      console.log(results);
+      res.render('index.ejs');
+    }
+  )
+});
+```
+
 ```bash
 ❯ node app.js
 Connected
