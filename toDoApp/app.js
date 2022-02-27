@@ -6,8 +6,10 @@ const app = express();
 // データベースと接続
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: 'progate',
+  password: 'password',
+  database: 'toDoApp',
+  port: 3306
 });
 connection.connect((error) => {
   if (error) throw error;
