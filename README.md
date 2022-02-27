@@ -172,7 +172,7 @@ publicディレクトリ配下に置く
 </div>
 ```
 
-### ルーティングの追加
+### ルーティングの追加(index)
 
 #### app.js
 
@@ -426,4 +426,47 @@ Connected
             </li>
           <% }) %>
         </ul>
+```
+
+### ルーティングの追加(new)
+
+#### app.js
+
+```javascript
+//...
+
+// new
+app.get('/new', (req, res) => {
+  res.render('new.ejs');
+})
+```
+
+#### ~/views/new.ejs
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LIST APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-logo">LIST APP</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1>買い物リスト作成</h1>
+      </div>
+      <div class="item-form-wrapper">
+        <p class="form-label">買うもの</p>
+        <input type="text">
+        <input type="submit" value="作成する">
+      </div>
+      <a href="/index" class="cancel-button">もどる</a>
+    </div>
+  </body>
+</html>
 ```

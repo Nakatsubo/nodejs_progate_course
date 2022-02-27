@@ -19,6 +19,8 @@ connection.connect((error) => {
 // Assets ファイルの設定
 app.use(express.static('public'));
 
+//////////////////// CRUD機能の追加
+
 // top
 app.get('/', (req, res) => {
   res.render('top.ejs');
@@ -34,6 +36,11 @@ app.get('/index', (req, res) => {
     }
   )
 });
+
+// new
+app.get('/new', (req, res) => {
+  res.render('new.ejs');
+})
 
 // サーバーを起動する
 app.listen(3000);
